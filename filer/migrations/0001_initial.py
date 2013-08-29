@@ -7,6 +7,9 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('hsauth', '0001_initial'),
+    )
     def forwards(self, orm):
         # Adding model 'Folder'
         db.create_table(u'filer_folder', (
