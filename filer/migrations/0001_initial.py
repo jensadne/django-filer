@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import datetime
+<<<<<<< HEAD
+=======
+import south
+>>>>>>> master
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -7,6 +11,7 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+<<<<<<< HEAD
     depends_on = (
         ('hsauth', '0001_initial'),
     )
@@ -41,10 +46,36 @@ class Migration(SchemaMigration):
             ('can_edit', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
             ('can_read', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
             ('can_add_children', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
+=======
+class Migration(SchemaMigration):
+
+    def forwards(self, orm):
+        # Adding model 'Image'
+        db.create_table('filer_image', (
+            (u'file_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['filer.File'], unique=True, primary_key=True)),
+            ('_height', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('_width', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('date_taken', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('default_alt_text', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('default_caption', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('author', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('must_always_publish_author_credit', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('must_always_publish_copyright', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('subject_location', self.gf('django.db.models.fields.CharField')(default=None, max_length=64, null=True, blank=True)),
+        ))
+        db.send_create_signal('filer', ['Image'])
+
+        # Adding model 'ClipboardItem'
+        db.create_table('filer_clipboarditem', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('file', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['filer.File'])),
+            ('clipboard', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['filer.Clipboard'])),
+>>>>>>> master
         ))
         db.send_create_signal('filer', ['FolderPermission'])
 
         # Adding model 'File'
+<<<<<<< HEAD
         db.create_table(u'filer_file', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('polymorphic_ctype', self.gf('django.db.models.fields.related.ForeignKey')(related_name='polymorphic_filer.file_set', null=True, to=orm['contenttypes.ContentType'])),
@@ -75,6 +106,57 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('file', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['filer.File'])),
             ('clipboard', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['filer.Clipboard'])),
+=======
+        db.create_table('filer_file', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('folder', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='all_files', null=True, to=orm['filer.Folder'])),
+            ('file_field', self.gf('django.db.models.fields.files.FileField')(max_length=255, null=True, blank=True)),
+            ('_file_type_plugin_name', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
+            ('_file_size', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('has_all_mandatory_data', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('original_filename', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='owned_files', null=True, to=orm['auth.User'])),
+            ('uploaded_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('modified_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+        ))
+        db.send_create_signal('filer', ['File'])
+        
+        # Adding model 'Folder'
+        db.create_table('filer_folder', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='children', null=True, to=orm['filer.Folder'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='filer_owned_folders', null=True, to=orm['auth.User'])),
+            ('uploaded_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('modified_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            (u'lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
+            (u'rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
+            (u'tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
+            (u'level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
+        ))
+        db.send_create_signal('filer', ['Folder'])
+        
+        # Adding model 'Clipboard'
+        db.create_table('filer_clipboard', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='filer_clipboards', to=orm['auth.User'])),
+        ))
+        db.send_create_signal('filer', ['Clipboard'])
+        
+        # Adding model 'FolderPermission'
+        db.create_table('filer_folderpermission', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('folder', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['filer.Folder'], null=True, blank=True)),
+            ('type', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='filer_folder_permissions', null=True, to=orm['auth.User'])),
+            ('group', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='filer_folder_permissions', null=True, to=orm['auth.Group'])),
+            ('everybody', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('can_edit', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
+            ('can_read', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
+            ('can_add_children', self.gf('django.db.models.fields.SmallIntegerField')(default=None, null=True, blank=True)),
+>>>>>>> master
         ))
         db.send_create_signal('filer', ['ClipboardItem'])
 
@@ -102,6 +184,7 @@ class Migration(SchemaMigration):
         db.delete_table(u'filer_folder')
 
         # Deleting model 'FolderPermission'
+<<<<<<< HEAD
         db.delete_table(u'filer_folderpermission')
 
         # Deleting model 'File'
@@ -116,6 +199,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Image'
         db.delete_table(u'filer_image')
 
+=======
+        db.delete_table('filer_folderpermission')
+>>>>>>> master
 
     models = {
         u'actor.actor': {
